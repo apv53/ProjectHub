@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="card shadow p-4" style="width: 400px; border-radius: 15px;">
+
+    <!-- Title -->
+    <h2 class="text-center mb-4">Login</h2>
+
+    <!-- Login Form -->
+    <form method="post">
+      {% csrf_token %}
+      
+      <!-- Form fields -->
+      <div class="mb-3">
+        {{ form.username.label_tag }}
+        {{ form.username }}
+        {% if form.username.errors %}
+          <div class="text-danger">{{ form.username.errors }}</div>
+        {% endif %}
+      </div>
+      
+      <div class="mb-3">
+        {{ form.password.label_tag }}
+        {{ form.password }}
+        {% if form.password.errors %}
+          <div class="text-danger">{{ form.password.errors }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Submit button -->
+      <div class="d-grid mb-3">
+        <button type="submit" class="btn btn-primary">Login</button>
+      </div>
+    </form>
+
+    <!-- Signup link -->
+    <div class="text-center">
+      <p>Don’t have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+  input:focus {
+    border-color: #28a745;
+    outline: none;
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.3);
+  }
+  /* Hide help texts */
+  .helptext, ul {
+    display: none !important;
+  }
+
+  .navbar-nav {
+    display: flex !important;
+  }
+</style>
+
+{% endblock %}

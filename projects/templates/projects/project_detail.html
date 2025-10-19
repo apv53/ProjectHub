@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+
+  <h1>{{ project.title }} </h1>
+  <h6>By {{project.owner}}</h6>
+  <hr width="100%">
+  <p>{{ project.description }}</p>
+
+  <!-- Demo Video -->
+  {% if project.demo_video %}
+    <video width="600" height="600" controls>
+      <source src="{{ project.demo_video.url }}" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  {% endif %}
+
+  <!-- Project File -->
+   <p>
+  {% if project.project_file %}
+    <span><a href="{{ project.project_file.url }}" download>📂 Download Project File</a></p>
+  {% endif %}&nbsp;&nbsp;&nbsp;
+  {% if user == project.owner %}
+  <span><a href="{% url 'project_delete' project.pk %}">🗑 Delete Project</a></span>
+  {% endif %}
+    </p>
+  <hr>
+
+  <!-- Voting Section -->
+  <div>
+    <p>
+      <button id="upvote-btn" class="btn btn-success">👍 Upvote</button> 
+      <span id="upvote-count">{{ project.upvotes }}</span>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <button id="downvote-btn" class="btn btn-danger">👎 Downvote</button> 
+      <span id="downvote-count">{{ project.downvotes }}</span>
+    </p>
+  </div>
+
+  <hr>
+
+  <!-- Comments Section -->
+  <h4>Comments</h4>
+  <ul class="list-group mb-3">
+    {% for comment in project.comments.all %}
+      <li class="list-group-item">
+        <strong>{{ comment.user.username }}</strong>: {{ comment.comment }}
+        <br><small>{{ comment.created_at }}</small>
+      </li>
+    {% empty %}
+      <li class="list-group-item">No comments yet.</li>
+    {% endfor %}
+  </ul>
+
+  {% if user.is_authenticated %}
+    <form method="post" action="{% url 'add_comment' project.pk %}">
+      {% csrf_token %}
+      <div class="mb-3">
+        <textarea name="comment" class="form-control" rows="3" placeholder="Add your comment..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Post Comment</button>
+    </form>
+  {% else %}
+    <p><a href="{% url 'login' %}">Login</a> to post a comment.</p>
+  {% endif %}
+
+</div>
+
+<!-- AJAX Voting Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const upvoteBtn = document.getElementById('upvote-btn');
+    const downvoteBtn = document.getElementById('downvote-btn');
+    const csrftoken = '{{ csrf_token }}';
+    const projectId = '{{ project.pk }}';
+
+    function sendVote(value) {
+        fetch(`/projects/${projectId}/vote/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrftoken,
+            },
+            body: `values=${value}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'ok' || data.status === 'removed') {
+                document.getElementById('upvote-count').textContent = data.upvotes;
+                document.getElementById('downvote-count').textContent = data.downvotes;
+            } else if (data.status === 'error') {
+                alert(data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    upvoteBtn.addEventListener('click', () => sendVote(1));
+    downvoteBtn.addEventListener('click', () => sendVote(-1));
+});
+</script>
+
+{% endblock %}

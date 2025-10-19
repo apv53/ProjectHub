@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+  <div class="card shadow p-4" style="max-width: 800px; margin: auto; border-radius: 15px;">
+    <h2 class="text-center mb-4">Create Project</h2>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      
+      <div class="mb-3">
+        <label for="{{ form.title.id_for_label }}" class="form-label">Title: </label><br>
+        {{ form.title }}
+      </div>
+
+      <div class="mb-3">
+        <label for="{{ form.description.id_for_label }}" class="form-label">Description:</label><br>
+        {{ form.description }}
+      </div>
+
+      <div class="mb-3">
+        <label for="{{ form.demo_video.id_for_label }}" class="form-label">Demo Video</label>
+        {{ form.demo_video }}
+      </div>
+
+      <div class="mb-3">
+        <label for="{{ form.project_file.id_for_label }}" class="form-label">Project File</label>
+        {{ form.project_file }}
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">Save Project</button>
+    </form>
+  </div>
+</div>
+<style>
+  input, textarea {
+    width: 100%;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+  input:focus {
+    border-color: #28a745;
+    outline: none;
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.3);
+  }
+  /* Hide help texts */
+  .helptext, ul {
+    display: none !important;
+  }
+
+  .navbar-nav {
+    display: flex !important;
+  }
+
+  
+</style>
+
+{% endblock %}

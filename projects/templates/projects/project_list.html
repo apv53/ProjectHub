@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+
+  <h2>All Projects</h2>
+  <hr>
+
+  {% for project in projects %}
+    <div class="card mb-3 shadow-sm">
+      <div class="row g-0">
+        
+        <!-- Cover Image -->
+        <div class="col-md-4 d-flex align-items-center justify-content-center p-2">
+          {% if project.cover_image %}
+            <img src="{{ project.cover_image.url }}" class="img-fluid rounded" alt="{{ project.title }}"  style="height: 250px; width: auto; object-fit: cover;">
+          {% else %}
+            <img src="https://via.placeholder.com/300x200?text=No+Image" class="img-fluid rounded" alt="No image">
+          {% endif %}
+        </div>
+
+        <!-- Title + Description -->
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title">
+              <a href="{% url 'project_detail' project.pk %}" style="font-size: 150%;">{{ project.title }}</a>
+            </h5>
+            <p class="card-text" style="font-size: 120%;">{{ project.description|truncatewords:30 }}</p>
+            <a href="{% url 'project_detail' project.pk %}" class="btn btn-primary btn-sm">View Details</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <p>No projects found.</p>
+  {% endfor %}
+
+</div>
+{% endblock %}

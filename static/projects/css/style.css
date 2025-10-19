@@ -1,0 +1,18 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+nav a {
+    margin-right: 10px;
+}
+
+/* Example: adjust background for custom pages */
+body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Extra tweaks if needed */
+[data-bs-theme="dark"] {
+    background-color: #121212;
+    color: #f1f1f1;
+}
